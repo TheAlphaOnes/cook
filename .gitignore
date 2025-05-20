@@ -1,3 +1,5 @@
-cook
-cook.exe
-
+dist
+out
+venv
+__pycache__
+# template_test

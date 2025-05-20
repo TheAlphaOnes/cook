@@ -1,0 +1,7 @@
+typer
+inquirer
+yaspin
+zstandard
+requests
+watchdog
+rich
