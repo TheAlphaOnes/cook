@@ -1,12 +1,18 @@
 import typer
 # from pathlib import Path
-# from cli import template
+from cli import template
+import os
+
 
 app = typer.Typer()
 
-# app.add_typer(template.app,name="template")
+app.add_typer(template.app,name="mold")
 
-@app.command("ping")
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+
+@app.command(".")
 def ping():
     print("COOK CLI TOOL - PING")
 
