@@ -5,3 +5,5 @@ zstandard
 requests
 watchdog
 rich
+platformdirs
+tqdm

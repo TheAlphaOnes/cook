@@ -1,0 +1,17 @@
+{
+    "name": "",
+    "author": "",
+    "stir": true,
+    "cmd": {
+        "serve": [],
+        "clean": []
+    },
+    "template": {
+        "name": "",
+        "category": "",
+        "date": "",
+        "author": "",
+        "stack": [],
+        "github": ""
+    }
+}
