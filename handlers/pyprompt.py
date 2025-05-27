@@ -10,6 +10,12 @@ from yaspin import yaspin
 from tqdm import tqdm
 
 
+
+# TODO:
+# choose dir
+# add list
+
+
 # Define a consistent Rich theme for console outputs
 theme = Theme({
     "ok": "green",

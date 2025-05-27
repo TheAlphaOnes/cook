@@ -1,7 +1,7 @@
 import typer
 # from pathlib import Path
 from cli import slice as cook_slice
-from cli import template
+from cli import mold
 import os
 import warnings
 
@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 app = typer.Typer()
 
 
-app.add_typer(template.app,name="mold")
+app.add_typer(mold.app,name="mold")
 app.add_typer(cook_slice.app,name="slice")
 
 
