@@ -44,7 +44,6 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @app.command(".")
 def ping():
-    # print("COOK CLI TOOL - PING")
     print(r'''
   _________  ____  __ __
  / ___/ __ \/ __ \/ //_/

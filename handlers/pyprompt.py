@@ -8,6 +8,7 @@ from rich.markdown import Markdown
 from rich.table import Table
 from yaspin import yaspin
 from tqdm import tqdm
+import os
 
 
 
@@ -133,3 +134,96 @@ class Terminal:
         for row in rows:
             table.add_row(*[str(cell) for cell in row])
         console.print(table)
+
+    @staticmethod
+    def show_list(title: str, items: list):
+      """Render a simple list with a title."""
+      console.print(f"[ok]{title}[/ok]")
+      for idx, item in enumerate(items, 1):
+        console.print(f"  [high]{idx}.[/high] {item}")
+
+    @staticmethod
+    def ask_list(prompt_text: str, min_items: int = 1) -> list:
+      """
+      Prompt the user to enter multiple items, one per line.
+      Input ends when the user enters an empty line.
+      Returns a list of entered items.
+      """
+      console.print(f"[green]{prompt_text}[/green] (Enter empty line to finish)")
+      items = []
+      while True:
+        item = Prompt.ask(f"{len(items)+1} [red] $ [/red]")
+        if not item:
+          if len(items) >= min_items:
+            break
+          else:
+            console.print(f"[err]Please enter at least {min_items} item(s).[/err]")
+            continue
+        items.append(item)
+      return items
+
+
+    @staticmethod
+    def choose_dir(prompt_text: str = "Select a directory") -> str:
+      """
+      Prompt the user to either select a directory from the current working directory and its subdirectories,
+      or enter a directory path manually.
+      Returns the selected or entered directory path as a string.
+      """
+      options = [
+        "Choose from list",
+        "Enter directory path manually"
+      ]
+      choice = Terminal.mcq(options, f"{prompt_text}: How would you like to select the directory?")
+      if choice == "Enter directory path manually":
+        while True:
+          dir_path = Terminal.ask("Enter directory path", required=True)
+          if os.path.isdir(dir_path):
+            return os.path.abspath(dir_path)
+          else:
+            Terminal.error("Invalid directory path. Please try again.")
+      else:
+        # Walk the current directory and collect all directories
+        dir_list = []
+        for root, dirs, _ in os.walk(os.getcwd()):
+          for d in dirs:
+            dir_list.append(os.path.relpath(os.path.join(root, d), os.getcwd()))
+        # Always include the current directory itself
+        dir_list.insert(0, ".")
+        if not dir_list:
+          Terminal.error("No directories found.")
+          return None
+        selected = Terminal.mcq(dir_list, prompt_text)
+        return os.path.abspath(selected)
+
+
+    @staticmethod
+    def choose_file(prompt_text: str = "Select a file") -> str:
+      """
+      Prompt the user to either select a file from the current working directory and its subdirectories,
+      or enter a file path manually.
+      Returns the selected or entered file path as a string.
+      """
+      options = [
+        "Choose from list",
+        "Enter file path manually"
+      ]
+      choice = Terminal.mcq(options, f"{prompt_text}: How would you like to select the file?")
+      if choice == "Enter file path manually":
+        while True:
+          file_path = Terminal.ask("Enter file path", required=True)
+          if os.path.isfile(file_path):
+            return os.path.abspath(file_path)
+          else:
+            Terminal.error("Invalid file path. Please try again.")
+      else:
+        # Walk the current directory and collect all files
+        file_list = []
+        for root, _, files in os.walk(os.getcwd()):
+          for f in files:
+            file_list.append(os.path.relpath(os.path.join(root, f), os.getcwd()))
+        if not file_list:
+          Terminal.error("No files found.")
+          return None
+        selected = Terminal.mcq(file_list, prompt_text)
+        return os.path.abspath(selected)
