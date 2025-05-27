@@ -76,11 +76,18 @@ class Terminal:
     @staticmethod
     def markdown(content: str, style: str = None):
         """Render Markdown content with optional styling."""
-        md = Markdown(content)
-        if style in ("error", "good", "high"):
-            console.print(md, style={"error": "err", "good": "ok", "high": "high"}[style])
+        txt = Markdown(content)
+        if style == "error":
+            console.print(txt,style="err")
+
+        elif style == "good":
+            console.print(txt,style="ok")
+
+        elif style == "high":
+            console.print(txt,style="high")
+
         else:
-            console.print(md)
+            console.print(txt)
 
     @staticmethod
     def mcq(options: list, question: str) -> str:

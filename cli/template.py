@@ -11,15 +11,7 @@ from handlers.mold import mold
 
 app = typer.Typer()
 
-# @app.command("scan")
-# def scan(dir:Path):
-#     if dir.is_dir() :
-#         name_temp = Terminal.ask("[green]Enter Your template Name[/green]")
-#         resp = Terminal.mcq(['asd',"asdas"],"ter,asd??")
-#         # create_devg_file()
-#         print(resp,name_temp)
-#     else:
-#         Terminal.error(f"[yellow]{dir}[/yellow] is Not a Directory, Process Aborted")
+
 
 
 @app.command("add")
@@ -35,9 +27,6 @@ def template_create(dir: Annotated[Optional[Path], typer.Argument()] = None,name
 
   elif RespValidate == False:
     print("FILL THE FORM")
-
-  else:
-    print("FILL ALL THE ARGS")
 
 
 
