@@ -227,3 +227,17 @@ class Terminal:
           return None
         selected = Terminal.mcq(file_list, prompt_text)
         return os.path.abspath(selected)
+
+    @staticmethod
+    def display_form(title: str, fields: list) -> None:
+      """
+      Display a beautiful form with a title and fields using a Rich table.
+      Each field should be a dict with a single key-value pair.
+      """
+      table = Table(title=title, title_style="ok", show_header=False, box=None, expand=False)
+      table.add_column("Field", style="high", no_wrap=True)
+      table.add_column("Value", style="white")
+      for field in fields:
+        for key, val in field.items():
+          table.add_row(str(key), str(val))
+      console.print(table)

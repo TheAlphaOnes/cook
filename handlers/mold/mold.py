@@ -1,7 +1,6 @@
-
 from handlers.utils import *
 
-def add(dir,name):
+def add(dir, name, catagory, version, stack, github):
 
   isConfFile = checkConfigFile(dirPath=dir)
 

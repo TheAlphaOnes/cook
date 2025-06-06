@@ -25,25 +25,26 @@ def template_create(
     github: Annotated[Optional[str], typer.Argument()] = None,
 ):
 
-    print(dir, name)
-    RespValidate = validateArgs(
-        dir, name, catagory, version, stack, github)
+    RespValidate = validateArgs(dir, name, catagory, version, stack, github)
 
     if RespValidate:
 
         stack = stack.split(",")
 
-        # print("WELL DONE",dir, name,catagory, author, version, stack, github)
-        # print(stack)
         mold.add(dir, name, catagory, version, stack, github)
 
     elif RespValidate == False:
         print("FILL THE FORM")
 
-        pyp.ask("template name", "name")
-        pyp.ask("template catagory", "catagory")
-        pyp.ask()
+        prompt_name  = pyp.ask("template name")
+        prompt_catagory = pyp.ask("template catagory")
+        prompt_dir = pyp.choose_dir("choose template directory")
+        prompt_version = pyp.ask("template version")
+        prompt_stack = pyp.ask_list("template stack (comma separated)")
+        prompt_github = pyp.ask("template github link")
 
+
+        mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github)
 
 @app.command("list")
 def template_list():
