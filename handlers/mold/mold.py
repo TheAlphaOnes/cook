@@ -33,7 +33,6 @@ def UploadTemplate(dir):
   spiner_upload = pyp.spinner("Uploading template to backend...")
   uploaded_file_data = backend.upload_template(comp_file+".tar.zst")
 
-  print(uploaded_file_data)
 
   templteMetaData =  config_data.copy()
   templteMetaData.update({
