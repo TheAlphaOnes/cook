@@ -12,7 +12,7 @@ from cli import slice as cook_slice
 from cli import mold
 
 from handlers.pyprompt import Terminal
-
+from handlers import const
 import os
 import warnings
 
@@ -47,18 +47,13 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @app.command(".")
 def ping():
+    pyp.high(const.COOK_BANNER)
 
-    pyp.error(r'''
-  _________  ____  __ __
- / ___/ __ \/ __ \/ //_/
-/ /__/ /_/ / /_/ / ,<
-\___/\____/\____/_/|_|
 
-  ''')
 
 @app.command("version")
 def version():
-    pyp.high("COOK_VERSION 1.0.0 (alpha)")
+    pyp.high(const.COOK_VERSION)
 
 # Follow this for version
 

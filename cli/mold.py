@@ -8,7 +8,7 @@ from handlers import packer
 from handlers.pyprompt import Terminal
 from handlers.utils import *
 from handlers.mold import mold
-
+from handlers import config
 
 pyp = Terminal()
 app = typer.Typer()
@@ -34,17 +34,36 @@ def template_create(
         mold.add(dir, name, catagory, version, stack, github)
 
     elif RespValidate == False:
-        print("FILL THE FORM")
 
-        prompt_name  = pyp.ask("template name")
-        prompt_catagory = pyp.ask("template catagory")
         prompt_dir = pyp.choose_dir("choose template directory")
-        prompt_version = pyp.ask("template version")
-        prompt_stack = pyp.ask_list("template stack (comma separated)")
-        prompt_github = pyp.ask("template github link")
+
+        isValid = config.validateConfigTemplateData(prompt_dir)
+
+        pyp.show("Configure the template")
+
+        if isValid:
+          userConfig = config.getConfigData(prompt_dir)
+          prompt_name  = pyp.ask("template name",default=userConfig['template']["name"])
+          prompt_catagory = pyp.ask("template catagory",default=userConfig['template']['category'])
+          prompt_version = pyp.ask("template version",default=userConfig['template']['version'])
+
+          pyp.show_list("old template stack", userConfig['template']['stack'])
+          prompt_stack = pyp.ask_list("template stack",default_list=userConfig['template']['stack'])
+
+          prompt_github = pyp.ask("template github link",default=userConfig['template']['github'])
+
+          mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github)
+
+        else:
+
+          prompt_name  = pyp.ask("template name")
+          prompt_catagory = pyp.ask("template catagory")
+          prompt_version = pyp.ask("template version")
+          prompt_stack = pyp.ask_list("template stack")
+          prompt_github = pyp.ask("template github link")
 
 
-        mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github)
+          mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github)
 
 @app.command("list")
 def template_list():
@@ -56,3 +75,18 @@ def template_list():
 def template_use():
 
     return
+
+@app.command("show")
+def show(dir: Annotated[Optional[Path], typer.Argument()] = None):
+
+    RespValidate = validateArgs(dir)
+
+    if RespValidate:
+        mold.show(dir)
+
+    else:
+        prompt_dir = pyp.choose_dir("choose template directory")
+
+        mold.show(prompt_dir)
+
+

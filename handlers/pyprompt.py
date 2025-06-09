@@ -143,7 +143,7 @@ class Terminal:
         console.print(f"  [high]{idx}.[/high] {item}")
 
     @staticmethod
-    def ask_list(prompt_text: str, min_items: int = 1) -> list:
+    def ask_list(prompt_text: str, min_items: int = 1,default_list=None) -> list:
       """
       Prompt the user to enter multiple items, one per line.
       Input ends when the user enters an empty line.
@@ -154,6 +154,11 @@ class Terminal:
       while True:
         item = Prompt.ask(f"{len(items)+1} [red] $ [/red]")
         if not item:
+          if len(items) == 0 and default_list is not None:
+            items = default_list
+            console.print(f"[ok]Using default items: {', '.join(items)}[/ok]")
+            return items
+
           if len(items) >= min_items:
             break
           else:
@@ -165,6 +170,7 @@ class Terminal:
 
     @staticmethod
     def choose_dir(prompt_text: str = "Select a directory") -> str:
+
       """
       Prompt the user to either select a directory from the current working directory and its subdirectories,
       or enter a directory path manually.
@@ -234,10 +240,10 @@ class Terminal:
       Display a beautiful form with a title and fields using a Rich table.
       Each field should be a dict with a single key-value pair.
       """
-      table = Table(title=title, title_style="ok", show_header=False, box=None, expand=False)
+      table = Table(title=title, title_style="ok", show_header=False)
       table.add_column("Field", style="high", no_wrap=True)
       table.add_column("Value", style="white")
       for field in fields:
         for key, val in field.items():
-          table.add_row(str(key), str(val))
+          table.add_row(str(key).capitalize(), str(val))
       console.print(table)

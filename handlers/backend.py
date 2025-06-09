@@ -1,5 +1,7 @@
 import httpx
+import os
 
+from datetime import datetime
 from handlers.user import readUserData
 
 from  handlers.const import TAO_SERVER_URL
@@ -8,7 +10,10 @@ from  handlers.const import TAO_SERVER_URL
 
 reqClient = httpx.Client()
 
+
+
 BASE = TAO_SERVER_URL
+
 COOK_KEY = readUserData()['key']
 COOK_APP = "cli"
 
@@ -43,17 +48,51 @@ def get_user_by_key(key:str=COOK_KEY):
 
 
 
+def upload_template(file_path):
+    """
+    Upload a .tar.zst template file to the server with the correct filename.
+    """
+    url = f"{BASE}/api/bucket/upload"
+    filename = os.path.basename(file_path)
+
+    with open(file_path, 'rb') as f:
+        files = {
+            "file": (filename, f, 'application/zstd')  # or 'application/octet-stream'
+        }
+        response = reqClient.post(url, files=files, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        response.raise_for_status()
 
 
-# import requests
 
-# url = "https://cook-platform.vercel.app/api/app/user/getByKey"
-# headers = {
-#     "X-COOK-APP": "cli",
-#     "X-COOK-KEY": "cook_connection_key_60e1771c-1b66-4596-8c57-30f99383a8b9"
-# }
-# querystring = {"key":"cook_connection_key_60e1771c-1b66-4596-8c57-30f99383a8b9"}
+def setMetaUploadTemplate(metaData):
 
-# response = requests.get(url, params=querystring, headers=headers)
+  url = f"{BASE}/api/app/template/create"
 
-# print(response.json())
+
+
+  payload = {
+      "id": metaData['id'],
+      "name": metaData['template']['name'],
+      "category": metaData['template']['category'],
+
+      "date": datetime.today().strftime('%Y-%m-%d'),
+      "author": metaData['author'],
+      "stack": metaData['template']['stack'],
+      "github": metaData['template']['github'],
+      "version": metaData['template']['version'],
+      "fileID": metaData['fileID']
+  }
+
+
+
+
+  response = reqClient.post(url, json=payload, headers=headers)
+
+
+  return response.json()
+
+

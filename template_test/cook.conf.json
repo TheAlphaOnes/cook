@@ -1,17 +1,26 @@
 {
-    "name": "",
-    "author": "",
+    "name": "react-next-template",
+    "author": "thenormvg",
     "stir": true,
     "cmd": {
-        "serve": [],
-        "clean": []
+        "serve": [
+            "pnpm run dev",
+            "pnpm run pg"
+        ],
+        "clean": [
+            "rm -rf node_modules"
+        ]
     },
     "template": {
-        "name": "",
-        "category": "",
-        "date": "",
-        "author": "",
-        "stack": [],
-        "github": ""
+        "name": "react-next-shadcn",
+        "category": "react",
+        "version": "1.0.0",
+        "stack": [
+            "react",
+            "next",
+            "shadcn",
+            "ts"
+        ],
+        "github": "https://github.com/NormVg/tao-old"
     }
 }
