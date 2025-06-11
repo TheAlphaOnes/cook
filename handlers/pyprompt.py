@@ -13,8 +13,6 @@ import os
 
 
 # TODO:
-# choose dir
-# add list
 
 
 # Define a consistent Rich theme for console outputs
@@ -71,8 +69,13 @@ class Terminal:
         """
         while True:
             response = Prompt.ask(f"[green]{prompt_text}[/green]", default=default)
-            if required and not response:
-                continue
+            if response is None or response.strip() == "":
+                if default is not None:
+                    return default
+                if required:
+                    console.print("[err]This field is required.[/err]")
+                    continue
+                return ""
             return response
 
     @staticmethod
@@ -130,10 +133,28 @@ class Terminal:
         """Render a table with a title, column headers, and row data."""
         table = Table(title=title, expand=True, title_style="ok")
         for col in columns:
-            table.add_column(col, justify="center", style="red", overflow="fold")
+            table.add_column(col, justify="left", style="red", overflow="fold")
         for row in rows:
             table.add_row(*[str(cell) for cell in row])
         console.print(table)
+
+    @staticmethod
+    def table_from_dicts(title: str, items: list):
+      """
+      Render a table from a list of dicts.
+      Keys become columns, values become rows.
+      """
+      if not items:
+        console.print("[err]No data to display.[/err]")
+        return
+      columns = list(items[0].keys())
+      table = Table(title=title, expand=True, title_style="ok")
+      for col in columns:
+        table.add_column(str(col), justify="left", style="high", overflow="fold")
+      for item in items:
+        row = [str(item.get(col, "")) for col in columns]
+        table.add_row(*row)
+      console.print(table)
 
     @staticmethod
     def show_list(title: str, items: list):
@@ -247,3 +268,28 @@ class Terminal:
         for key, val in field.items():
           table.add_row(str(key).capitalize(), str(val))
       console.print(table)
+
+
+
+    @staticmethod
+    def ask_checkbox(name: str, message: str, choices: list) -> list:
+        """
+        Generic checkbox prompt using inquirer.
+
+        Args:
+            name (str): Internal name/key of the prompt.
+            message (str): Message/question to show to user.
+            choices (list): List of choices to select from.
+
+        Returns:
+            list: List of selected options.
+        """
+        questions = [
+            inquirer.Checkbox(
+                name,
+                message=message,
+                choices=choices,
+            ),
+        ]
+        answers = inquirer.prompt(questions)
+        return answers.get(name, [])

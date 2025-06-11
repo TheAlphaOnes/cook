@@ -21,15 +21,30 @@ def compress_folder(folder_path, output_file):
 
 
 def decompress_folder(compressed_file, output_folder):
-    # Decompress the .tar.zst file with zstd
-    dctx = zstd.ZstdDecompressor()
-    with open(compressed_file, 'rb') as zstd_file:
-        with open(output_folder + '.tar', 'wb') as tar_file:
-            tar_file.write(dctx.decompress(zstd_file.read()))
+  # Ensure output_folder exists
+  os.makedirs(output_folder, exist_ok=True)
 
-    # Extract the contents of the .tar file to the output folder
-    with tarfile.open(output_folder + '.tar', 'r') as tar:
-        tar.extractall(output_folder)
+  temp_tar_path = os.path.join(output_folder, '__temp__.tar')
 
-    # Clean up the temporary .tar file
-    os.remove(output_folder + '.tar')
+  # Decompress the .tar.zst file with zstd
+  dctx = zstd.ZstdDecompressor()
+  with open(compressed_file, 'rb') as zstd_file, open(temp_tar_path, 'wb') as tar_file:
+    tar_file.write(dctx.decompress(zstd_file.read()))
+
+  # Extract the contents of the .tar file to the output folder
+  with tarfile.open(temp_tar_path, 'r') as tar:
+    tar.extractall(output_folder)
+
+  # Clean up the temporary .tar file
+  os.remove(temp_tar_path)
+
+  # If only one top-level folder exists, move its contents up
+  extracted_items = [item for item in os.listdir(output_folder) if item != '__temp__.tar']
+  if len(extracted_items) == 1:
+    single_folder = os.path.join(output_folder, extracted_items[0])
+    if os.path.isdir(single_folder):
+      for item in os.listdir(single_folder):
+        src = os.path.join(single_folder, item)
+        dst = os.path.join(output_folder, item)
+        os.rename(src, dst)
+      os.rmdir(single_folder)

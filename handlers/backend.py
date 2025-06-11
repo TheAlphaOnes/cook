@@ -4,12 +4,10 @@ import os
 from datetime import datetime
 from handlers.user import readUserData
 
-from  handlers.const import TAO_SERVER_URL
-
+from handlers.const import TAO_SERVER_URL
 
 
 reqClient = httpx.Client()
-
 
 
 BASE = TAO_SERVER_URL
@@ -24,8 +22,7 @@ headers = {
 }
 
 
-def get_user_by_key(key:str=COOK_KEY):
-
+def get_user_by_key(key: str = COOK_KEY):
     """
     Fetch user details by key.
     """
@@ -47,7 +44,6 @@ def get_user_by_key(key:str=COOK_KEY):
         response.raise_for_status()
 
 
-
 def upload_template(file_path):
     """
     Upload a .tar.zst template file to the server with the correct filename.
@@ -57,7 +53,8 @@ def upload_template(file_path):
 
     with open(file_path, 'rb') as f:
         files = {
-            "file": (filename, f, 'application/zstd')  # or 'application/octet-stream'
+            # or 'application/octet-stream'
+            "file": (filename, f, 'application/zstd')
         }
         response = reqClient.post(url, files=files, headers=headers)
 
@@ -67,12 +64,9 @@ def upload_template(file_path):
         response.raise_for_status()
 
 
-
 def setMetaUploadTemplate(metaData):
 
   url = f"{BASE}/api/app/template/create"
-
-
 
   payload = {
       "id": metaData['id'],
@@ -87,12 +81,79 @@ def setMetaUploadTemplate(metaData):
       "fileID": metaData['fileID']
   }
 
-
-
-
   response = reqClient.post(url, json=payload, headers=headers)
 
-
   return response.json()
+
+
+def doesTemplatExist(uid):
+    url = f"{BASE}/api/app/template/get?uid={uid}"
+
+
+
+    response = reqClient.get(url, headers=headers)
+
+    if response.json()['data'] == {}:
+        print('none')
+        return False,{}
+    else:
+        return (True,response.json())
+
+
+
+def listUserTemplates(username):
+
+    url = f"{BASE}/api/app/template/getByuser"
+
+    querystring = {"username":username}
+
+    response = reqClient.get(url, params=querystring , headers=headers)
+
+    # print(response.json())
+    # return response.json()
+    if response.status_code == 200:
+        return response.json()
+    else:
+        response.raise_for_status()
+
+
+
+def downloadTemplate(file_id,name):
+
+    url = f"{BASE}/api/bucket/download"
+
+    querystring = {"file":file_id}
+
+    response = reqClient.get(url, params=querystring,headers=headers)
+
+
+    # print(response.json())
+    file_url = response.json()['file']
+
+    response = reqClient.get(file_url)
+    if response.status_code == 200:
+
+      filename = os.path.basename(f"{name}.tar.zst")
+      file_path = os.path.join(os.getcwd(), filename)
+      with open(file_path, "wb") as f:
+        f.write(response.content)
+      return file_path
+
+    else:
+      response.raise_for_status()
+
+
+
+def getTemplateData(uuid):
+
+    url = f"{BASE}/api/app/template/get"
+
+    querystring = {"uid":uuid}
+
+    response = reqClient.get(url, params=querystring, headers=headers)
+
+    print(response.json())
+
+    return response.json()['data']
 
 

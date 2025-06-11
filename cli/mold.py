@@ -67,14 +67,20 @@ def template_create(
 
 @app.command("list")
 def template_list():
-
+    mold.list_template()
     return
 
 
 @app.command("use")
-def template_use():
+def template_use(template_id:Annotated[Optional[str], typer.Argument()] = None):
+    RespValidate = validateArgs(template_id)
 
-    return
+
+    mold.use(template_id, ask=not RespValidate)
+
+
+
+
 
 @app.command("show")
 def show(dir: Annotated[Optional[Path], typer.Argument()] = None):

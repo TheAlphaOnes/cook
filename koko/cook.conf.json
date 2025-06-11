@@ -12,9 +12,9 @@
         ]
     },
     "template": {
-        "name": "tao-doom",
-        "category": "nuxt",
-        "version": "1.23.5",
+        "name": "tao-starter",
+        "category": "",
+        "version": "1.0.0",
         "stack": [
             "nuxt",
             "pinia",
