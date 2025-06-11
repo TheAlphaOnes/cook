@@ -255,7 +255,6 @@ def use(uuid, ask=False):
 
 
 def remove(uuid,ask=False):
-
    return
 
 
