@@ -1,6 +1,8 @@
 
 # MAKE SURE THE URL NOT END WITH '/'
 TAO_SERVER_URL = "https://cook-platform.vercel.app"
+# TAO_SERVER_URL = "http://localhost:3000"
+
 
 DEFAULT_USER_DATA = {
     "username": "",
@@ -16,6 +18,7 @@ DEFAULT_COOK_CONFIG = {
       "stir": True,
       "cmd": {
           "serve": [],
+          "cook": [],
           "clean": []
       },
       "template": {
@@ -24,7 +27,8 @@ DEFAULT_COOK_CONFIG = {
           "date": "",
           "author": "",
           "stack": [],
-          "github": ""
+          "github": "",
+          "readme":""
       }
   }
 

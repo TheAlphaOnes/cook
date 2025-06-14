@@ -190,11 +190,11 @@ class Terminal:
 
 
     @staticmethod
-    def choose_dir(prompt_text: str = "Select a directory") -> str:
-
+    def choose_dir(prompt_text: str = "Select a directory", start_dir: str = None) -> str:
       """
-      Prompt the user to either select a directory from the current working directory and its subdirectories,
-      or enter a directory path manually.
+      Prompt the user to either select a directory from a starting directory (default: current working directory)
+      and its subdirectories (excluding hidden folders), or enter a directory path manually.
+      Only searches up to 2 directory levels deep.
       Returns the selected or entered directory path as a string.
       """
       options = [
@@ -210,50 +210,75 @@ class Terminal:
           else:
             Terminal.error("Invalid directory path. Please try again.")
       else:
-        # Walk the current directory and collect all directories
+        base_dir = start_dir if start_dir else os.getcwd()
         dir_list = []
-        for root, dirs, _ in os.walk(os.getcwd()):
+        for root, dirs, _ in os.walk(base_dir):
+          # Calculate depth relative to base_dir
+          rel_path = os.path.relpath(root, base_dir)
+          depth = 0 if rel_path == "." else rel_path.count(os.sep) + 1
+          if depth > 2:
+            # Don't descend further
+            dirs[:] = []
+            continue
+          # Remove hidden directories in-place
+          dirs[:] = [d for d in dirs if not d.startswith('.')]
           for d in dirs:
-            dir_list.append(os.path.relpath(os.path.join(root, d), os.getcwd()))
-        # Always include the current directory itself
+            dir_rel_path = os.path.relpath(os.path.join(root, d), base_dir)
+            dir_list.append(dir_rel_path)
+        # Always include the base directory itself
         dir_list.insert(0, ".")
         if not dir_list:
           Terminal.error("No directories found.")
           return None
         selected = Terminal.mcq(dir_list, prompt_text)
-        return os.path.abspath(selected)
+        return os.path.abspath(os.path.join(base_dir, selected))
 
 
     @staticmethod
-    def choose_file(prompt_text: str = "Select a file") -> str:
-      """
-      Prompt the user to either select a file from the current working directory and its subdirectories,
-      or enter a file path manually.
-      Returns the selected or entered file path as a string.
-      """
-      options = [
-        "Choose from list",
-        "Enter file path manually"
-      ]
-      choice = Terminal.mcq(options, f"{prompt_text}: How would you like to select the file?")
-      if choice == "Enter file path manually":
-        while True:
-          file_path = Terminal.ask("Enter file path", required=True)
-          if os.path.isfile(file_path):
-            return os.path.abspath(file_path)
-          else:
-            Terminal.error("Invalid file path. Please try again.")
-      else:
-        # Walk the current directory and collect all files
-        file_list = []
-        for root, _, files in os.walk(os.getcwd()):
-          for f in files:
-            file_list.append(os.path.relpath(os.path.join(root, f), os.getcwd()))
-        if not file_list:
-          Terminal.error("No files found.")
-          return None
-        selected = Terminal.mcq(file_list, prompt_text)
-        return os.path.abspath(selected)
+    def choose_file(prompt_text: str = "Select a file", start_dir: str = None) -> str:
+        """
+        Prompt the user to either select a file from a directory (default: current working directory)
+        and its subdirectories (excluding hidden folders), or enter a file path manually.
+        Only searches up to 2 directory levels deep.
+        Returns the selected or entered file path as a string.
+
+        Args:
+            prompt_text (str): The prompt to display.
+            start_dir (str, optional): The directory to start searching from. Defaults to os.getcwd().
+        """
+        options = [
+            "Choose from list",
+            "Enter file path manually"
+        ]
+        choice = Terminal.mcq(options, f"{prompt_text}: How would you like to select the file?")
+        if choice == "Enter file path manually":
+            while True:
+                file_path = Terminal.ask("Enter file path", required=True)
+                if os.path.isfile(file_path):
+                    return os.path.abspath(file_path)
+                else:
+                    Terminal.error("Invalid file path. Please try again.")
+        else:
+            base_dir = start_dir if start_dir else os.getcwd()
+            file_list = []
+            for root, dirs, files in os.walk(base_dir):
+                # Calculate depth relative to base_dir
+                rel_path = os.path.relpath(root, base_dir)
+                depth = 0 if rel_path == "." else rel_path.count(os.sep) + 1
+                if depth > 2:
+                    # Don't descend further
+                    dirs[:] = []
+                    continue
+                # Remove hidden directories in-place
+                dirs[:] = [d for d in dirs if not d.startswith('.')]
+                for f in files:
+                    file_rel_path = os.path.relpath(os.path.join(root, f), base_dir)
+                    file_list.append(file_rel_path)
+            if not file_list:
+                Terminal.error("No files found.")
+                return None
+            selected = Terminal.mcq(file_list, prompt_text)
+            return os.path.abspath(os.path.join(base_dir, selected))
 
     @staticmethod
     def display_form(title: str, fields: list) -> None:

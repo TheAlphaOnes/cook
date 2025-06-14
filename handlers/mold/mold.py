@@ -11,6 +11,13 @@ pyp = Terminal()
 
 
 
+# TODO  in mold/use make it with public + user private
+# TODO  in mold/show make it with public + user private and with id
+# TODO  in mold/update make it update  user private
+
+
+
+
 def getUserTemplateNames():
 
     userData = user.readUserData()
@@ -68,10 +75,27 @@ def UploadTemplate(dir):
     uploaded_file_data = backend.upload_template(comp_file+".tar.zst")
 
     templteMetaData = config_data.copy()
+
+
+
+    f = open(templteMetaData['template']['readme'],'r')
+    md = f.read()
+    f.close()
+
+
+
+    # templteMetaData['template'].pop("readme")
+
+
+
     templteMetaData.update({
         "fileID": uploaded_file_data['file'],
-        "id": uuid
+        "id": uuid,
+        "info":md
     })
+
+
+
 
     backend.setMetaUploadTemplate(templteMetaData)
     os.remove(comp_file+".tar.zst")
@@ -89,7 +113,7 @@ def UploadTemplate(dir):
 
 
 
-def add(dir, name, category, version, stack, github):
+def add(dir, name, category, version, stack, github,readme):
 
     isConfFile = config.checkConfigFile(dirPath=dir)
 
@@ -100,7 +124,8 @@ def add(dir, name, category, version, stack, github):
                 "category": category,
                 "version": version,
                 "stack": stack,
-                "github": github
+                "github": github,
+                "readme":readme
             }
         })
     else:
@@ -110,7 +135,8 @@ def add(dir, name, category, version, stack, github):
             "category": category,
             "version": version,
             "stack": stack,
-            "github": github
+            "github": github,
+            "readme":readme
         }
 
         pyp.high("Creating Cook config file...")
@@ -126,29 +152,64 @@ def add(dir, name, category, version, stack, github):
     pyp.good("Template added successfully!")
 
 
-def show(dir):
-    isConfFile = config.checkConfigFile(dirPath=dir)
+def show(uuid:str, ask=False):
 
-    if not isConfFile:
-        pyp.error("Cook config file not found!")
-        return
+  templateData = {}
+  userData = user.readUserData()
 
-    config_data = config.getConfigData(dirPath=dir)
+  if ask:
 
-    uuid = f"{config_data['author']}/@{config_data['template']['category']}/{config_data['template']['name']}"
+    spinner = pyp.spinner("Fetching user templates...")
+    try:
+      userTemplateList = backend.listUserTemplates(userData['username'])
+      templates = userTemplateList.get("data", [])
+      spinner.ok("[success]")
+    except Exception as e:
+      spinner.fail("[error]")
+      pyp.error(f"Error fetching templates: {e}")
+      return
 
-    if 'template' in config_data:
-        template = config_data['template']
+    template_names = [template.get("id") for template in templates]
 
-        tempForm = [{'id': uuid}]
+    if template_names == []:
+      pyp.error("No personal templates found. You can see a public template instead.")
+      sys.exit()
 
-        for k, v in template.items():
-            tempForm.append({k: v})
+    selected_uuid = pyp.mcq(question="Choose a template to see", options=template_names)
+    for template in templates:
+      if template['id'] == selected_uuid:
+        templateData.update(template)
+        break
 
-        pyp.display_form(title="template info", fields=tempForm)
+  else:
+    spinner = pyp.spinner("Fetching template data...")
+    try:
 
-    else:
-        pyp.error("No template data found in the configuration.")
+      if userData['username'] == uuid.split("/")[0]:
+        userTemplateData = backend.getUserTemplateData(uuid=uuid)
+
+      else:
+        userTemplateData = backend.getPublicTemplateData(uuid=uuid)
+
+      spinner.ok("[success]")
+    except Exception as e:
+      spinner.fail("[error]")
+      pyp.error(f"Error fetching template data: {e}")
+      return
+
+    if not userTemplateData:
+      pyp.error("Template not found.")
+      return
+
+    templateData = userTemplateData.copy()
+
+  pyp.display_form(
+    title="Template Data",
+    fields=[{k: v} for k, v in templateData.items() if k != 'fileID' and k != 'info']
+  )
+
+  isMore = pyp.confirm("Display more info? ")
+  if isMore: pyp.markdown(templateData['info'])
 
 
 def list_template():
@@ -181,13 +242,13 @@ def list_template():
         pyp.error(f"Error fetching templates: {e}")
 
 
+def use(uuid:str, ask=False):
 
-
-def use(uuid, ask=False):
   templateData = {}
+  userData = user.readUserData()
 
   if ask:
-    userData = user.readUserData()
+
     spinner = pyp.spinner("Fetching user templates...")
     try:
       userTemplateList = backend.listUserTemplates(userData['username'])
@@ -200,6 +261,10 @@ def use(uuid, ask=False):
 
     template_names = [template.get("id") for template in templates]
 
+    if template_names == []:
+      pyp.error("No personal templates found. You can use a public template instead.")
+      sys.exit()
+
     selected_uuid = pyp.mcq(question="Choose a template to use", options=template_names)
     for template in templates:
       if template['id'] == selected_uuid:
@@ -209,7 +274,13 @@ def use(uuid, ask=False):
   else:
     spinner = pyp.spinner("Fetching template data...")
     try:
-      userTemplateData = backend.getTemplateData(uuid=uuid)
+
+      if userData['username'] == uuid.split("/")[0]:
+        userTemplateData = backend.getUserTemplateData(uuid=uuid)
+
+      else:
+        userTemplateData = backend.getPublicTemplateData(uuid=uuid)
+
       spinner.ok("[success]")
     except Exception as e:
       spinner.fail("[error]")
@@ -224,8 +295,12 @@ def use(uuid, ask=False):
 
   pyp.display_form(
     title="Template Data",
-    fields=[{k: v} for k, v in templateData.items() if k != 'fileID']
+    fields=[{k: v} for k, v in templateData.items() if k != 'fileID' and k != 'info']
   )
+
+  isMore = pyp.confirm("Display more info? ")
+  if isMore: pyp.markdown(templateData['info'])
+
 
   isUsing = pyp.confirm("Do you want to continue with this template?")
 
@@ -253,10 +328,61 @@ def use(uuid, ask=False):
     pyp.error("Process cancelled.")
 
 
-
-def remove(uuid,ask=False):
-   return
-
-
 def update(uuid,ask=False):
-   return
+
+  templateData = {}
+  userData = user.readUserData()
+
+  if ask:
+
+    spinner = pyp.spinner("Fetching user templates...")
+    try:
+      userTemplateList = backend.listUserTemplates(userData['username'])
+      templates = userTemplateList.get("data", [])
+      spinner.ok("[success]")
+    except Exception as e:
+      spinner.fail("[error]")
+      pyp.error(f"Error fetching templates: {e}")
+      return
+
+    template_names = [template.get("id") for template in templates]
+
+    if template_names == []:
+      pyp.error("No personal templates found. You can see a public template instead.")
+      sys.exit()
+
+    selected_uuid = pyp.mcq(question="Choose a template to see", options=template_names)
+    for template in templates:
+      if template['id'] == selected_uuid:
+        templateData.update(template)
+        break
+
+  else:
+    spinner = pyp.spinner("Fetching template data...")
+    try:
+
+      if userData['username'] == uuid.split("/")[0]:
+        userTemplateData = backend.getUserTemplateData(uuid=uuid)
+
+      else:
+        userTemplateData = backend.getPublicTemplateData(uuid=uuid)
+
+      spinner.ok("[success]")
+    except Exception as e:
+      spinner.fail("[error]")
+      pyp.error(f"Error fetching template data: {e}")
+      return
+
+    if not userTemplateData:
+      pyp.error("Template not found.")
+      return
+
+    templateData = userTemplateData.copy()
+
+  pyp.display_form(
+    title="Template Data",
+    fields=[{k: v} for k, v in templateData.items() if k != 'fileID' and k != 'info']
+  )
+
+  isMore = pyp.confirm("Display more info? ")
+  if isMore: pyp.markdown(templateData['info'])

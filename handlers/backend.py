@@ -5,7 +5,7 @@ from datetime import datetime
 from handlers.user import readUserData
 
 from handlers.const import TAO_SERVER_URL
-
+from handlers import user
 
 reqClient = httpx.Client()
 
@@ -78,6 +78,7 @@ def setMetaUploadTemplate(metaData):
       "stack": metaData['template']['stack'],
       "github": metaData['template']['github'],
       "version": metaData['template']['version'],
+      "info": metaData['info'],
       "fileID": metaData['fileID']
   }
 
@@ -144,15 +145,32 @@ def downloadTemplate(file_id,name):
 
 
 
-def getTemplateData(uuid):
+def getUserTemplateData(uuid):
+
+    user_data = user.readUserData()
+
 
     url = f"{BASE}/api/app/template/get"
+
+    querystring = {"uid":uuid,"username":user_data['username']}
+
+    response = reqClient.get(url, params=querystring, headers=headers)
+
+    # print(response.json())
+
+    return response.json()['data']
+
+
+def getPublicTemplateData(uuid):
+
+    url = f"{BASE}/api/app/template/public-get"
+
 
     querystring = {"uid":uuid}
 
     response = reqClient.get(url, params=querystring, headers=headers)
 
-    print(response.json())
+    # print(response.json())
 
     return response.json()['data']
 

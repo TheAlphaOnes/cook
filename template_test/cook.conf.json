@@ -1,26 +1,30 @@
 {
-    "name": "react-next-template",
+    "name": "qwe",
     "author": "thenormvg",
     "stir": true,
     "cmd": {
         "serve": [
-            "pnpm run dev",
-            "pnpm run pg"
+            "dfg"
         ],
+        "cook": [],
         "clean": [
-            "rm -rf node_modules"
+            "123"
+        ],
+        "build": [
+            "vnb"
         ]
     },
     "template": {
-        "name": "tao-doom",
-        "category": "nuxt",
-        "version": "1.23.5",
+        "name": "readme-test-v2",
+        "category": "md",
+        "version": "1.23.4.",
         "stack": [
-            "nuxt",
-            "pinia",
+            "md",
             "js",
-            "tao-sso"
+            "vue",
+            "py"
         ],
-        "github": "https://github.com/NormVg/nuxt-tao-sso"
+        "github": "https://github.com/NormVg/cook",
+        "readme": "/home/vishnu/room/tao/cook/cook-cli/template_test/README.md"
     }
 }

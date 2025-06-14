@@ -94,21 +94,23 @@ def inputConfigData(ask_template=True, template_data=None):
 
   config_data['name'] = pyp.ask("Enter project name", required=True)
   config_data['stir'] = pyp.confirm("wana stir the project? (y/n)")
-  config_data['cmd']['serve'] = pyp.ask_list("Enter command to serve the project")
-  config_data['cmd']['clean'] = pyp.ask_list("Enter command to clean the project")
-
+  config_data['cmd']['serve'] = pyp.ask_list("Enter commands to serve the project")
+  config_data['cmd']['build'] = pyp.ask_list("Enter commands to build the project")
+  config_data['cmd']['clean'] = pyp.ask_list("Enter commands to clean the project")
 
   config_data['author'] = userData['username']
 
 # dir, name, category, version, stack, github
   if ask_template:
-      isTemplate = pyp.confirm("Do you want to use this as template? (y/n)")
+      isTemplate = pyp.confirm("Do you want to use this as template?")
       if isTemplate:
         config_data['template']['name'] = pyp.ask("Enter template name", required=True)
         config_data['template']['category'] = pyp.ask("Enter template category", required=True)
         config_data['template']['version'] = pyp.ask("Enter template version", required=True)
         config_data['template']['stack'] = pyp.ask_list("Enter template stack")
         config_data['template']['github'] = pyp.ask("Enter template github link", required=True)
+        config_data['template']['readme'] = pyp.choose_file("Choose README.md file")
+
   else:
       if template_data:
           config_data['template'] = template_data

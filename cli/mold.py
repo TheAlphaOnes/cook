@@ -52,7 +52,10 @@ def template_create(
 
           prompt_github = pyp.ask("template github link",default=userConfig['template']['github'])
 
-          mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github)
+          prompt_readme = pyp.choose_file("choose README.md file",start_dir=prompt_dir)
+
+
+          mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github,prompt_readme)
 
         else:
 
@@ -62,8 +65,11 @@ def template_create(
           prompt_stack = pyp.ask_list("template stack")
           prompt_github = pyp.ask("template github link")
 
+          prompt_readme = pyp.choose_file("choose README.md file",start_dir=prompt_dir)
 
-          mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github)
+
+
+          mold.add(prompt_dir, prompt_name, prompt_catagory, prompt_version, prompt_stack, prompt_github,prompt_readme)
 
 @app.command("list")
 def template_list():
@@ -83,16 +89,18 @@ def template_use(template_id:Annotated[Optional[str], typer.Argument()] = None):
 
 
 @app.command("show")
-def show(dir: Annotated[Optional[Path], typer.Argument()] = None):
+def show(template_id: Annotated[Optional[str], typer.Argument()] = None):
 
-    RespValidate = validateArgs(dir)
-
-    if RespValidate:
-        mold.show(dir)
-
-    else:
-        prompt_dir = pyp.choose_dir("choose template directory")
-
-        mold.show(prompt_dir)
+    RespValidate = validateArgs(template_id)
 
 
+    mold.show(template_id, ask=not RespValidate)
+
+
+
+@app.command('update')
+def update(template_id: Annotated[Optional[str], typer.Argument()] = None):
+
+    RespValidate = validateArgs(template_id)
+
+    mold.update(template_id, ask=not RespValidate)
