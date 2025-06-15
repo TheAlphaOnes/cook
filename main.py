@@ -2,6 +2,7 @@ import typer
 from typing import Optional,List
 from typing_extensions import Annotated
 
+from cli import license as License
 from cli import cleanup as cook_cleanup
 from cli import stir as cook_stir
 from cli import ignite as cook_ignite
@@ -12,7 +13,7 @@ from cli import cmd as cook_cmd
 from cli import auth as cook_auth
 from cli import slice as cook_slice
 from cli import mold
-from handlers.loc import line_of_code
+#from handlers.loc import line_of_code
 from handlers.pyprompt import Terminal
 from handlers import const
 import os
@@ -28,7 +29,7 @@ app = typer.Typer()
 
 app.add_typer(cook_auth.app,name="auth")
 app.add_typer(mold.app,name="mold")
-
+app.add_typer(License.app,name="license")
 # app.add_typer(cook_cleanup.app, name="cleanup")
 # app.add_typer(cook_stir.app, name= "stir")
 
@@ -52,9 +53,9 @@ def ping():
     pyp.high(const.COOK_BANNER)
 
 
-@app.command("loc")
-def loc(dir: Annotated[str, typer.Argument()] = ".",commands: Annotated[List[str], typer.Argument()] = None):
-    line_of_code(dir,commands)
+# @app.command("loc")
+# def loc(dir: Annotated[str, typer.Argument()] = ".",commands: Annotated[List[str], typer.Argument()] = None):
+#     line_of_code(dir,commands)
 
 @app.command("version")
 def version():
