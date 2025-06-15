@@ -2,7 +2,7 @@ import typer
 from typing import Optional,List
 from typing_extensions import Annotated
 
-from cli import license as License
+from cli import license 
 from cli import cleanup as cook_cleanup
 from cli import stir as cook_stir
 from cli import ignite as cook_ignite
@@ -29,7 +29,7 @@ app = typer.Typer()
 
 app.add_typer(cook_auth.app,name="auth")
 app.add_typer(mold.app,name="mold")
-app.add_typer(License.app,name="license")
+app.add_typer(license.app,name="license")
 # app.add_typer(cook_cleanup.app, name="cleanup")
 # app.add_typer(cook_stir.app, name= "stir")
 
@@ -44,8 +44,8 @@ app.add_typer(License.app,name="license")
 
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 @app.command(".")

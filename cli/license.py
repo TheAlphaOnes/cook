@@ -1,5 +1,5 @@
 import typer
-from handlers.license.license import license_list
+from handlers.license.license import license_list, listlicense
 from handlers.license.license import listlicense
 from handlers.license import license
 from typing_extensions import Annotated
@@ -22,22 +22,24 @@ def list ():
 
 
 
-@app.command("licensegen")
+@app.command("gen")
 def licensegen(
 
     licensename: Annotated[Optional[str], typer.Argument()] = None,
-    author: Annotated[Optional[str], typer.Argument()] = None,
+    projectname: Annotated[Optional[str], typer.Argument()] = None,
 ):
     
+    RespValidate = validateArgs(licensename,projectname)
     
-    
-    if licensename is None:
+
+    if RespValidate == False:
+
         licensename = pyp.mcq(license_list, "Select a license")
 
     if licensename == "none":
+
         return
 
-# Only reaches here if license is valid
-    pyp.show("Enter the name of the author.")
-    author = input()
-   
+
+    pyp.show("Enter your Project Name.")    
+    projectname = input()
