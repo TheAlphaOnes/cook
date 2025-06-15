@@ -12,6 +12,8 @@ from cli import cmd as cook_cmd
 from cli import auth as cook_auth
 from cli import slice as cook_slice
 from cli import mold
+from cli import license as cook_licence
+
 from handlers.loc import line_of_code
 from handlers.pyprompt import Terminal
 from handlers import const
@@ -28,6 +30,7 @@ app = typer.Typer()
 
 app.add_typer(cook_auth.app,name="auth")
 app.add_typer(mold.app,name="mold")
+app.add_typer(cook_licence.app,name="licence")
 
 # app.add_typer(cook_cleanup.app, name="cleanup")
 # app.add_typer(cook_stir.app, name= "stir")

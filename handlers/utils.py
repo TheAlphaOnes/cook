@@ -1,6 +1,5 @@
-import os
 import platformdirs
-
+import sys
 from handlers.pyprompt import Terminal
 
 
@@ -8,14 +7,13 @@ from handlers.pyprompt import Terminal
 pyp = Terminal()
 
 def validateArgs(*args):
-
     if set(args) == {None}:
         return False
 
     if None in args:
         # print("FILL ALL THE ARGS")
         pyp.error("All arguments are required. Please provide valid inputs.")
-        return None
+        sys.exit()
     else:
         return True
 

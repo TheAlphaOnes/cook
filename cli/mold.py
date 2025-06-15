@@ -22,8 +22,7 @@ def template_create(
     catagory: Annotated[Optional[str], typer.Argument()] = None,
     version: Annotated[Optional[str], typer.Argument()] = None,
     stack: Annotated[Optional[str], typer.Argument()] = None,
-    github: Annotated[Optional[str], typer.Argument()] = None,
-):
+    github: Annotated[Optional[str], typer.Argument()] = None,):
 
     RespValidate = validateArgs(dir, name, catagory, version, stack, github)
 
@@ -79,13 +78,10 @@ def template_list():
 
 @app.command("use")
 def template_use(template_id:Annotated[Optional[str], typer.Argument()] = None):
+
     RespValidate = validateArgs(template_id)
 
-
     mold.use(template_id, ask=not RespValidate)
-
-
-
 
 
 @app.command("show")
@@ -93,14 +89,13 @@ def show(template_id: Annotated[Optional[str], typer.Argument()] = None):
 
     RespValidate = validateArgs(template_id)
 
-
     mold.show(template_id, ask=not RespValidate)
 
 
 
 @app.command('update')
-def update(template_id: Annotated[Optional[str], typer.Argument()] = None):
+def update(dir: Annotated[Optional[Path], typer.Argument()] = None):
 
-    RespValidate = validateArgs(template_id)
+    RespValidate = validateArgs(dir)
 
-    mold.update(template_id, ask=not RespValidate)
+    mold.update(dir, ask=not RespValidate)

@@ -328,64 +328,15 @@ def use(uuid:str, ask=False):
     pyp.error("Process cancelled.")
 
 
-def update(uuid,ask=False):
+def update(dir,ask=False):
 
-  templateData = {}
-  userData = user.readUserData()
+    nowDir = ''
 
-  if ask:
+    if ask:
+        prompt_dir = pyp.choose_dir("choose template directory")
+        nowDir = prompt_dir
 
-    spinner = pyp.spinner("Fetching user templates...")
-    try:
-      userTemplateList = backend.listUserTemplates(userData['username'])
-      templates = userTemplateList.get("data", [])
-      spinner.ok("[success]")
-    except Exception as e:
-      spinner.fail("[error]")
-      pyp.error(f"Error fetching templates: {e}")
-      return
+    else:
+      nowDir = dir
 
-    template_names = [template.get("id") for template in templates]
-
-    if template_names == []:
-      pyp.error("No personal templates found. You can see a public template instead.")
-      sys.exit()
-
-    selected_uuid = pyp.mcq(question="Choose a template to see", options=template_names)
-    for template in templates:
-      if template['id'] == selected_uuid:
-        templateData.update(template)
-        break
-
-  else:
-    spinner = pyp.spinner("Fetching template data...")
-    try:
-
-      if userData['username'] == uuid.split("/")[0]:
-        userTemplateData = backend.getUserTemplateData(uuid=uuid)
-
-      else:
-        userTemplateData = backend.getPublicTemplateData(uuid=uuid)
-
-      spinner.ok("[success]")
-    except Exception as e:
-      spinner.fail("[error]")
-      pyp.error(f"Error fetching template data: {e}")
-      return
-
-    if not userTemplateData:
-      pyp.error("Template not found.")
-      return
-
-    templateData = userTemplateData.copy()
-
-  pyp.display_form(
-    title="Template Data",
-    fields=[{k: v} for k, v in templateData.items() if k != 'fileID' and k != 'info']
-  )
-
-  isMore = pyp.confirm("Display more info? ")
-  if isMore: pyp.markdown(templateData['info'])
-
-
-
+    print(nowDir)
