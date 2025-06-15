@@ -1,30 +1,45 @@
-# Cook CLI Tool Setup Instructions
+# 🍳 Cook CLI Tool
 
-Follow the steps below to set up and run the Cook CLI tool:
+The **Cook CLI Tool** is a lightweight, developer-friendly command-line interface designed to streamline your workflows.
 
-1. **Create a virtual environment**:
-  ```bash
-  python3 -m venv env
-  ```
+---
 
-2. **Activate the virtual environment**:
-  - On Linux/macOS:
-    ```bash
-    source env/bin/activate
-    ```
-  - On Windows:
-    ```bash
-    .\env\Scripts\activate
-    ```
+## 🚀 Setup Instructions
 
-3. **Install the required packages**:
-  ```bash
-  pip install -r requirements.txt
-  ```
+### 1. Clone the Repository
 
-4. **Run the main script**:
-  ```bash
-  python main.py
-  ```
+```bash
+git clone https://github.com/your-username/cook-cli.git
+cd cook-cli
+```
+### 2. Create a Virtual Environment
+```bash
+python3 -m venv env
+```
+### 3. Activate the Virtual Environment
+#### Linux/macOS:
 
-You're all set to use the Cook CLI tool!
+```bash
+source env/bin/activate
+```
+### 4. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+### 5. Run the CLI Tool
+```bash
+python main.py
+```
+## 🧑‍💻 Usage
+Once running, follow the on-screen prompts to use the tool’s features.
+
+## 📦 Requirements
+Python 3.7 or higher
+pip
+
+## 🤝 Contributing
+Pull requests are welcome! Fork the repository and submit your changes via a pull request.
+
+## 📄 License
+This project is licensed under the MIT License.
+
