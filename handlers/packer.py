@@ -48,3 +48,5 @@ def decompress_folder(compressed_file, output_folder):
         dst = os.path.join(output_folder, item)
         os.rename(src, dst)
       os.rmdir(single_folder)
+
+  return os.path.abspath(output_folder)

@@ -4,154 +4,66 @@ from handlers.pyprompt import Terminal
 from handlers import packer
 from handlers import user
 from handlers import backend
+from handlers.mold import mold_helper
 
-import sys
+import sys,os
 
 pyp = Terminal()
 
 
-
-# TODO  in mold/use make it with public + user private
-# TODO  in mold/show make it with public + user private and with id
 # TODO  in mold/update make it update  user private
 
 
+# PROD
+def add(dir,templateData,ask=False):
+
+    nowDir = None
+    nowTemplateData = {}
 
 
-def getUserTemplateNames():
+    if ask:
+      prompt_dir = pyp.choose_dir("choose template directory")
+      isConfFile = config.checkConfigFile(dirPath=prompt_dir)
+      isValid = config.validateConfigTemplateData(prompt_dir)
 
-    userData = user.readUserData()
-    spinner = pyp.spinner("Getting user templates")
-    response = backend.listUserTemplates(userData['username'])
-
-    try:
-        userTemplateList = dict(response)
-        templates = userTemplateList.get("data", [])
-
-        template_names = [template.get("id") for template in templates]
-
-        spinner.ok("[success]")
-        return template_names
-
-    except Exception as e:
-        spinner.fail("[error]")
-        pyp.error(f"Error fetching templates: {e}")
-        sys.exit()
-        return []
+      if isConfFile and isValid:
+          template_data = mold_helper.ask_template_by_config(fromDir=True,dir=prompt_dir)
+          nowDir = prompt_dir
+          nowTemplateData.update(template_data)
+      else:
+          template_data = mold_helper.ask_template_new(prompt_dir)
+          nowDir = prompt_dir
+          nowTemplateData.update(template_data)
 
 
-def UploadTemplate(dir):
-
-    config_data = dict(config.getConfigData(dir))
-
-    user_data = user.readUserData()
-
-    uuid = f"{user_data['username']}/@{config_data['template']['category']}/{config_data['template']['name']}"
-
-    check_template = pyp.spinner("validating template data")
-
-    try:
-        (isValid, _) = backend.doesTemplatExist(uuid)
-        check_template.ok("[success]")
-
-    except:
-        check_template.fail("[error]")
-
-    if isValid:
-
-        pyp.error(
-            f'template with the name "{config_data['template']['name']}" and category "{config_data['template']['category']}" already exist')
-
-        sys.exit()
-
-    comp_file = os.path.join(
-        dir, f"cook_template_{config_data['template']['name']}")
-
-    spiner_comp = pyp.spinner("Compressing template folder...")
-    packer.compress_folder(dir, comp_file)
-    spiner_comp.ok("[success]")
-
-    spiner_upload = pyp.spinner("Uploading template...")
-    uploaded_file_data = backend.upload_template(comp_file+".tar.zst")
-
-    templteMetaData = config_data.copy()
-
-
-
-    f = open(templteMetaData['template']['readme'],'r')
-    md = f.read()
-    f.close()
-
-
-
-    # templteMetaData['template'].pop("readme")
-
-
-
-    templteMetaData.update({
-        "fileID": uploaded_file_data['file'],
-        "id": uuid,
-        "info":md
-    })
-
-
-
-
-    backend.setMetaUploadTemplate(templteMetaData)
-    os.remove(comp_file+".tar.zst")
-    spiner_upload.ok("[success]")
-
-
-
-
-
-
-
-
-
-
-
-
-
-def add(dir, name, category, version, stack, github,readme):
-
-    isConfFile = config.checkConfigFile(dirPath=dir)
-
-    if isConfFile:
-        config.updateConfigData(dirPath=dir, data={
-            "template": {
-                "name": name,
-                "category": category,
-                "version": version,
-                "stack": stack,
-                "github": github,
-                "readme":readme
-            }
-        })
     else:
+      nowDir = dir
+      nowTemplateData.update(templateData)
 
-        template_data = {
-            "name": name,
-            "category": category,
-            "version": version,
-            "stack": stack,
-            "github": github,
-            "readme":readme
-        }
 
-        pyp.high("Creating Cook config file...")
+    isConfFile = config.checkConfigFile(dirPath=nowDir)
+
+
+    if not isConfFile:
+        pyp.error("Creating Cook config file...")
 
         config_data = config.inputConfigData(
-            ask_template=False, template_data=template_data)
+              ask_template=False, template_data=nowTemplateData)
 
-        config.createCookConfigFile(dirPath=dir, config_data=config_data)
+        config.createCookConfigFile(dirPath=nowDir, config_data=config_data)
 
         pyp.good("Cook config file created successfully!")
 
-    UploadTemplate(dir)
+    else:
+        config.updateConfigData(dirPath=nowDir, data={
+            "template": nowTemplateData
+        })
+
+    mold_helper.UploadTemplate(nowDir)
     pyp.good("Template added successfully!")
 
 
+# PROD
 def show(uuid:str, ask=False):
 
   templateData = {}
@@ -161,15 +73,15 @@ def show(uuid:str, ask=False):
 
     spinner = pyp.spinner("Fetching user templates...")
     try:
-      userTemplateList = backend.listUserTemplates(userData['username'])
-      templates = userTemplateList.get("data", [])
+
+      templates = mold_helper.getUserTemplatesList()
       spinner.ok("[success]")
     except Exception as e:
       spinner.fail("[error]")
       pyp.error(f"Error fetching templates: {e}")
       return
 
-    template_names = [template.get("id") for template in templates]
+    template_names = mold_helper.getUserTemplateNames(templates)
 
     if template_names == []:
       pyp.error("No personal templates found. You can see a public template instead.")
@@ -203,27 +115,18 @@ def show(uuid:str, ask=False):
 
     templateData = userTemplateData.copy()
 
-  pyp.display_form(
-    title="Template Data",
-    fields=[{k: v} for k, v in templateData.items() if k != 'fileID' and k != 'info']
-  )
-
-  isMore = pyp.confirm("Display more info? ")
-  if isMore: pyp.markdown(templateData['info'])
+  mold_helper.display_template_info(fromConfig=True,templateData=templateData)
 
 
+# PROD
 def list_template():
 
-    userData = user.readUserData()
     spinner = pyp.spinner("Getting user templates")
 
     try:
-        response = backend.listUserTemplates(userData['username'])
-        userTemplateList = dict(response)
-        templates = userTemplateList.get("data", [])
+        templates = mold_helper.getUserTemplatesList()
 
         spinner.ok("[success]")
-
 
         for template in templates:
             template.pop("fileID", None)
@@ -242,6 +145,7 @@ def list_template():
         pyp.error(f"Error fetching templates: {e}")
 
 
+# PROD
 def use(uuid:str, ask=False):
 
   templateData = {}
@@ -251,21 +155,23 @@ def use(uuid:str, ask=False):
 
     spinner = pyp.spinner("Fetching user templates...")
     try:
-      userTemplateList = backend.listUserTemplates(userData['username'])
-      templates = userTemplateList.get("data", [])
+
+      templates = mold_helper.getUserTemplatesList()
       spinner.ok("[success]")
+
     except Exception as e:
       spinner.fail("[error]")
       pyp.error(f"Error fetching templates: {e}")
-      return
+      sys.exit()
 
-    template_names = [template.get("id") for template in templates]
+    template_names = mold_helper.getUserTemplateNames(templates)
 
     if template_names == []:
       pyp.error("No personal templates found. You can use a public template instead.")
       sys.exit()
 
     selected_uuid = pyp.mcq(question="Choose a template to use", options=template_names)
+
     for template in templates:
       if template['id'] == selected_uuid:
         templateData.update(template)
@@ -293,14 +199,8 @@ def use(uuid:str, ask=False):
 
     templateData = userTemplateData.copy()
 
-  pyp.display_form(
-    title="Template Data",
-    fields=[{k: v} for k, v in templateData.items() if k != 'fileID' and k != 'info']
-  )
 
-  isMore = pyp.confirm("Display more info? ")
-  if isMore: pyp.markdown(templateData['info'])
-
+  mold_helper.display_template_info(fromConfig=True,templateData=templateData)
 
   isUsing = pyp.confirm("Do you want to continue with this template?")
 
@@ -318,7 +218,11 @@ def use(uuid:str, ask=False):
 
     spinner = pyp.spinner("Extracting template files...")
     try:
-      packer.decompress_folder(filePath, newFolderName)
+      folderPath = packer.decompress_folder(filePath, newFolderName)
+
+
+      config.updateConfigData(folderPath,{"name":newFolderName.lower(),"author":userData.get('username','')})
+
       os.remove(filePath)
       spinner.ok("[success]")
     except Exception as e:
@@ -330,13 +234,53 @@ def use(uuid:str, ask=False):
 
 def update(dir,ask=False):
 
-    nowDir = ''
+    nowDir = None
 
     if ask:
         prompt_dir = pyp.choose_dir("choose template directory")
         nowDir = prompt_dir
 
     else:
+
+
       nowDir = dir
 
-    print(nowDir)
+    isConfFile = config.checkConfigFile(dirPath=prompt_dir)
+    isValid = config.validateConfigTemplateData(prompt_dir)
+
+    if isConfFile and isValid:
+
+        template_data = mold_helper.display_template_info(fromDir=True,dir=nowDir)
+
+        pyp.high("Updating template information...")
+
+        newTemplateData = mold_helper.ask_template_by_config(fromConfig=True,templateData=template_data)
+
+        print(nowDir)
+        print(newTemplateData)
+
+    else:
+        pyp.error("Cook config not found or not valid")
+
+
+        
+
+
+        # config.updateConfigData(dirPath=nowDir, data={
+        #   "template": {
+        #     "name": prompt_name,
+        #     "category": prompt_catagory,
+        #     "version": prompt_version,
+        #     "stack": prompt_stack,
+        #     "github": prompt_github,
+        #     "readme": prompt_readme
+        #   }
+        # })
+
+        # if isRepack:
+        #   UploadTemplate(nowDir)
+        #   pyp.good("Template updated and uploaded successfully!")
+        # else:
+        #   pyp.good("Template metadata updated successfully!")
+
+

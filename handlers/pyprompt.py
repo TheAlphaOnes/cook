@@ -201,7 +201,7 @@ class Terminal:
         "Choose from list",
         "Enter directory path manually"
       ]
-      choice = Terminal.mcq(options, f"{prompt_text}: How would you like to select the directory?")
+      choice = Terminal.mcq(options, f"How would you like to select the directory")
       if choice == "Enter directory path manually":
         while True:
           dir_path = Terminal.ask("Enter directory path", required=True)

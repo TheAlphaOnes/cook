@@ -2,13 +2,14 @@ import gitignorefile
 import os
 from handlers import pyprompt
 from collections import defaultdict
-
+from handlers.const import COOK_INVISIBLE_FF
 pyp = pyprompt.Terminal()
 
 def get_all_files_and_folders(root_folder, exclude_list=None):
   if exclude_list is None:
     exclude_list = []
 
+  exclude_list = exclude_list+COOK_INVISIBLE_FF
   gitignore_path = os.path.join(root_folder, ".gitignore")
   matches = None
   if os.path.isfile(gitignore_path):

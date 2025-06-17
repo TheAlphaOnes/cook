@@ -15,6 +15,7 @@ from cli import mold
 from cli import license as cook_licence
 
 from handlers.loc import line_of_code
+from handlers import tree
 from handlers.pyprompt import Terminal
 from handlers import const
 import os
@@ -56,8 +57,14 @@ def ping():
 
 
 @app.command("loc")
-def loc(dir: Annotated[str, typer.Argument()] = ".",commands: Annotated[List[str], typer.Argument()] = None):
-    line_of_code(dir,commands)
+def loc(dir: Annotated[str, typer.Argument()] = ".",exclude: Annotated[List[str], typer.Argument()] = None):
+    line_of_code(dir,exclude)
+
+
+@app.command("tree")
+def loc(dir: Annotated[str, typer.Argument()] = ".",exclude: Annotated[List[str], typer.Argument()] = None):
+    tree.show_tree_for_directory(dir,exclude if exclude else [])
+
 
 @app.command("version")
 def version():

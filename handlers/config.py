@@ -93,7 +93,7 @@ def inputConfigData(ask_template=True, template_data=None):
   config_data = DEFAULT_COOK_CONFIG.copy()
 
   config_data['name'] = pyp.ask("Enter project name", required=True)
-  config_data['stir'] = pyp.confirm("wana stir the project? (y/n)")
+  config_data['stir'] = pyp.confirm("wana stir the project? ")
   config_data['cmd']['serve'] = pyp.ask_list("Enter commands to serve the project")
   config_data['cmd']['build'] = pyp.ask_list("Enter commands to build the project")
   config_data['cmd']['clean'] = pyp.ask_list("Enter commands to clean the project")

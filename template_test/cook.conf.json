@@ -15,7 +15,7 @@
         ]
     },
     "template": {
-        "name": "readme-test-v2",
+        "name": "test-v3-py",
         "category": "md",
         "version": "1.23.4.",
         "stack": [
@@ -25,6 +25,6 @@
             "py"
         ],
         "github": "https://github.com/NormVg/cook",
-        "readme": "/home/vishnu/room/tao/cook/cook-cli/template_test/README.md"
+        "readme": "README.md"
     }
 }

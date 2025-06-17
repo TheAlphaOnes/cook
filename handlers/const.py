@@ -18,7 +18,7 @@ DEFAULT_COOK_CONFIG = {
       "stir": True,
       "cmd": {
           "serve": [],
-          "cook": [],
+          "build": [],
           "clean": []
       },
       "template": {
@@ -43,3 +43,16 @@ COOK_BANNER = r'''
 
 
 COOK_VERSION = "COOK_VERSION 1.0.0 (alpha)"
+
+
+COOK_INVISIBLE_FF = [
+  ".git",
+  "node_modules",
+  "__pycache__",
+  ".DS_Store",
+  ".venv",
+  "venv",
+  ".vscode",
+  ".pytest_cache",
+  ".cache",
+]
