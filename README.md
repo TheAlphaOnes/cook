@@ -4,7 +4,7 @@
   <img src=".github/image.png" alt="Cook CLI Banner" width="100%">
 </p>
 
-<h1 align="center">🍳 Cook – The All-in-One CLI for Lazy Devs</h1>
+<h1 align="center">Cook – The All-in-One CLI for Lazy Devs</h1>
 
 <p align="center">
   <b>Like npm, but for everything – without the npm and better.</b><br>
