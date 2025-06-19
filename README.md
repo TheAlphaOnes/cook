@@ -1,127 +1,170 @@
-# 🍳 COOK CLI — Code Cooking for Lazy Developers
 
-> A Swiss Army Knife for developers who’d rather *build* than boil water.
 
----
+<p align="center">
+  <img src=".github/image.png" alt="Cook CLI Banner" width="100%">
+</p>
 
-**Cook** is your everyday CLI sidekick — a tool built for devs who want to automate boring stuff, reuse project bits, and flex some code-cooking muscle without sweating in boilerplate sauce.
+<h1 align="center">🍳 Cook – The All-in-One CLI for Lazy Devs</h1>
 
----
+<p align="center">
+  <b>Like npm, but for everything – without the npm and better.</b><br>
+  Automate your dev workflow, organize your codebase, and streamline commands – all from one CLI.
+</p>
 
-## 🚀 Features
+<p align="center">
+  <a href="https://github.com/thealphaones/cook/releases"><img src="https://img.shields.io/github/v/release/thenormvg/cook?style=flat-square" /></a>
+  <a href="https://github.com/thealphaones/cook/blob/main/LICENSE"><img src="https://img.shields.io/github/license/thenormvg/cook?style=flat-square" /></a>
+  <a href="https://yourpublicplatform.com"><img src="https://img.shields.io/badge/Templates%20Hub-online-blue?style=flat-square" /></a>
+</p>
 
-🍝 **Code Snippets**
-Store, reuse, and share local/public code snippets for instant reuse.
+<!-- ---
 
-🍱 **Project Templates**
-Save and reuse entire project structures. Build fast. Scaffold smart.
-
-🔧 **Custom Commands**
-Define CLI commands globally or per project. Automate anything from builds to deployments.
-
-📜 **License Generator**
-One-line open-source license creation for your repos.
-
-🔐 **API Key Manager**
-Secure, local or cloud API key management.
-
-🧅 **Layers**
-Group snippets, templates, and commands (like frontend/backend/utils) logically.
-
-🔥 **Hot Reload & Cleanup**
-Reload changes instantly and sweep project cruft from the CLI.
-
-🌍 **Online Sharing**
-Share & sync your snippets, templates, and tokens via the web.
-
-🖥️ **Local UI**
-Manage everything visually with a clean, local web UI.
-
-🧠 **MCP Server Integration** *(coming soon)*
-Model Context Protocol for shared workflows and plugin discovery.
-
-🔌 **Plugin System** *(coming soon)*
-Extend Cook with custom plugins. Unleash niche workflows.
-
-🎉 **...and more coming!**
-
----
-
-## 🧑‍🍳 Quick Preview
+## 🚀 Install
 
 ```bash
-$ cook --version
-COOK CLI v0.1.0-alpha
+curl -fsSL https://raw.githubusercontent.com/thenormvg/cook/main/install.sh | bash
+````
 
-$ cook list recipes
-• @react/vite
-• @react/mongo-express-bun
-• @Nuxt/primeui-pinia-betterauth
-• @Next/shadcn-zustand-authjs
-• @py/typer-rich
-• @py/fastapi-auth-mongo
-• @py/streamlit-huggingface-torch
-• @go/cobra-bubble
-• @go/fiber-auth-postgres
-```
+This will install the `cook` binary globally.
+You can also manually clone and build it if needed. -->
+
+---
+
+## 🎯 Features in v1
+
+* **📦 Code Templates with Online Sync**
+  Create and reuse full project templates. Sync them via our public hub.
+
+* **⚙️ Global & Local Custom Commands**
+  Automate your routine commands per project or system-wide.
+
+* **📜 License Generator**
+  Generate open-source licenses for your projects instantly.
+
+* **📊 Lines of Code Counter**
+  Analyze your project code stats, respecting `.gitignore`.
+
+* **🌲 Directory Tree Viewer**
+  Visually explore your folder structure in the terminal.
+
+* **🔁 Hot Reload & Cleanup**
+  Instantly apply config changes and clean unused files.
+
+---
+
+## 🧠 CLI Command Tree
 
 ```bash
-$ cook prep @go/cobra-bubble
-✓ Recipe ready! Estimated cooking time: 15 sec
+cook
+├── auth                # Authentication
+│   ├── login           # Log in to your account
+│   ├── logout          # Log out
+│   └── now             # Show current session
+├── mold                # Template (Mold) management
+│   ├── add             # Add a new template
+│   ├── list            # List templates
+│   ├── use             # Use a template
+│   ├── show            # Show template details
+│   └── update          # Update a template
+├── cmd                 # Custom command management
+│   ├── add_global      # Add global command
+│   ├── add_local       # Add project command
+│   ├── list            # List all commands
+│   └── remove          # Remove a command
+├── licence             # License handling
+│   ├── gen             # Generate license
+│   ├── list            # List available licenses
+│   └── show            # View license text
+├── loc                 # Show LOC stats
+├── tree                # Render folder structure
+├── version             # Show CLI version
+└── .                   # Ping/default action
 ```
 
-```bash
-$ cook run serve
-➜ Local: http://localhost:3000/
+---
+
+## 🧾 Example: `cook.config.json`
+
+Here’s a sample project config using Cook:
+
+```json
+{
+  "name": "nuxt-awesome-app",
+  "author": "thenormvg",
+  "stir": true,
+  "cmd": {
+    "dev": ["nuxi dev"],
+    "build": ["nuxi build"],
+    "preview": ["nuxi preview"],
+    "lint": ["eslint . --fix"],
+    "clean": ["rm -rf .output .nuxt dist"]
+  },
+  "template": {
+    "name": "nuxt-fullstack-template",
+    "category": "nuxt",
+    "version": "1.0.0",
+    "stack": [
+      "nuxt",
+      "vue 3",
+      "typescript",
+      "pinia",
+      "drizzle ORM",
+      "postgresql",
+      "tailwindcss",
+      "framer motion"
+    ],
+    "github": "https://github.com/thenormvg/nuxt-fullstack-template",
+    "readme": "README.md"
+  }
+}
 ```
 
-## 🏗️ Architecture
+---
 
-1. **CLI Tool**
-   CRUD for templates, snippets, commands, layers, tunnels, and more.
+## 🧭 Architecture
 
-2. **Local Web Interface**
-   A browser-based GUI that runs alongside the CLI.
-
-3. **Public Platform**
-   Sync and host your templates, API keys, and snippets with version control.
-
-4. **MCP Server** *(coming soon)*
-   Discover plugins, connect services, and share workflows in a context-aware way.
+```
+Cook CLI Ecosystem
+├── 🧠 Core CLI Tool
+│   └── Handles all local automation, commands, and templates
+├── ☁️ Public Platform (hub)
+│   └── Online template/snippet repo
+└── 🔌 MCP Server (Soon..)
+    └── Discoverable services, shared workflows, and plugins
+```
 
 ---
 
-## 🧑‍💻 Who’s it for?
+## 💡 Who Is It For?
 
-- 💻 Solo devs juggling multiple side projects.
-- 👨‍👩‍👧‍👦 Teams looking to standardize and reuse workflows.
-- 🤝 Open-source contributors who want clean, consistent project structure.
-- 😤 Anyone who’s tired of typing the same boilerplate again and again.
-
----
-
-## 🐣 Early Access
-
-We’re still cooking up **v1**, and you can help shape it! Join the waitlist to access:
-
-- 🔐 Exclusive internal builds
-- 📖 Plugin development guides
-- 🧪 Early testing & feedback channels
-
-➡️ [**Join the Waitlist**](https://cook-platform.vercel.app)
+* Developers juggling multiple side-projects
+* Teams standardizing workflows and setups
+* OSS contributors creating repeatable project layouts
+* Builders who just want things done fast ⚡
 
 ---
 
-## 🔗 Links
+## 🌍 Join the Early Access
 
-- 🌐 [cook-platform.vercel.app](https://cook-platform.vercel.app)
-- 🧠 [Docs](https://cook-platform.vercel.app/docs)
-- 🐦 [Twitter/X](https://x.com/TheNormVg)
-- 📺 [YouTube](https://youtube.com/@thenormvg)
-- 🧪 [TheAlphaOnes](https://thealphaones.com)
+We're actively building **Cook v1** and accepting early adopters.
+Join the waitlist and get access to:
+
+* 🔒 Internal beta builds
+* 📦 Plugin dev tools
+* 🧠 Influence over future features
+
+👉 [**Join Early Access »**](https://yourwebsite.com/waitlist)
 
 ---
 
+## 📄 License
 
-> 💬 Built with love by **[TheAlphaOnes](https://thealphaones.com)**
-> © 2025 COOK CLI. All rights reserved.
+Licensed under the [MIT License](./LICENSE).
+
+---
+
+<p align="center">
+  Made with ❤️ for lazy devs by <a href="https://github.com/thealphaones">TheAlphaOnes</a>
+</p>
+
+
