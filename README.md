@@ -1,7 +1,7 @@
 
 
 <p align="center">
-  <img src=".github/image.png" alt="Cook CLI Banner" width="100%">
+  <img src=".github/image.png" alt="Cook CLI Banner" width="100%" style="border-radius:12px"">
 </p>
 
 <h1 align="center">Cook – The All-in-One CLI for Lazy Devs</h1>
@@ -57,8 +57,8 @@ You can also manually clone and build it if needed. -->
 ```bash
 cook
 ├── auth                # Authentication
-│   ├── login           # Log in to your account
-│   ├── logout          # Log out
+│   ├── log-in           # Log in to your account
+│   ├── log-out          # Log out
 │   └── now             # Show current session
 ├── mold                # Template (Mold) management
 │   ├── add             # Add a new template
