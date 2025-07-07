@@ -91,13 +91,9 @@ Here’s a sample project config using Cook:
 {
   "name": "nuxt-awesome-app",
   "author": "thenormvg",
-  "stir": true,
   "cmd": {
-    "dev": ["nuxi dev"],
-    "build": ["nuxi build"],
-    "preview": ["nuxi preview"],
-    "lint": ["eslint . --fix"],
-    "clean": ["rm -rf .output .nuxt dist"]
+    "serve": { "cmd": ["pnpm i", "npm run dev"], "hot": true },
+    "build": {"cmd": ["pnpm run build"], "hot": false}
   },
   "template": {
     "name": "nuxt-fullstack-template",
