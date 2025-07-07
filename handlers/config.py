@@ -40,11 +40,11 @@ def createCookConfigFile(dirPath,config_data=None):
 
 def getConfigData(dirPath):
     if not checkConfigFile(dirPath):
-        createCookConfigFile(dirPath)
-
+        pyp.error("Cook config file not found, use cook init to create one")
+        exit(1)
+        # createCookConfigFile(dirPath)
     with open(getConfigPath(dirPath), "r") as file:
         config_data = json.load(file)
-
     return config_data
 
 def updateConfigData(dirPath, data):
