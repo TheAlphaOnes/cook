@@ -40,7 +40,7 @@ app.add_typer(cook_licence.app,name="licence")
 # app.add_typer(cook_tunnel.app, name="tunnel")
 
 # app.add_typer(cook_plate.app, name="plate")
-# app.add_typer(cook_cmd.app, name="cmd")
+app.add_typer(cook_cmd.app, name="cmd")
 
 # app.add_typer(cook_layer.app, name="layer")
 # app.add_typer(cook_slice.app,name="slice")
