@@ -1,26 +1,26 @@
 {
-  "name": "nuxt-awesome-app",
-  "author": "thenormvg",
-  "stir": true,
-  "cmd": {
-    "serve": ["npm i","npm run dev"],
-    "build": ["npm run build"]
-  },
-  "template": {
-    "name": "nuxt-fullstack-template",
-    "category": "nuxt",
-    "version": "1.0.0",
-    "stack": [
-      "nuxt",
-      "vue 3",
-      "typescript",
-      "pinia",
-      "drizzle ORM",
-      "postgresql",
-      "tailwindcss",
-      "framer motion"
-    ],
-    "github": "https://github.com/thenormvg/nuxt-fullstack-template",
-    "readme": "README.md"
-  }
+    "name": "Alex",
+    "author": "sibamnight",
+    "stir": true,
+    "cmd": {
+        "serve": [
+            "npm i",
+            "npm run dev"
+        ],
+        "build": [
+            "npm run build"
+        ],
+        "clean": [
+            "rm -rf node_modules"
+        ]
+    },
+    "template": {
+        "name": "",
+        "category": "",
+        "date": "",
+        "author": "",
+        "stack": [],
+        "github": "",
+        "readme": ""
+    }
 }
