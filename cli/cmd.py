@@ -10,7 +10,10 @@ def cmd_list():
     cmd_handler.list()
 
 @app.command("run")
-def cmd_run(group: Annotated[str, typer.Argument(help="Command group to run")]):
+def cmd_run(
+    group: Annotated[str, typer.Argument(help="Command group to run")],
+    hot: bool = typer.Option(False, is_flag=True, help="To run in stir mode"),
+):
     """Run all commands in the specified group (e.g. serve, build, clean)"""
-    cmd_handler.run(group)
+    cmd_handler.run(group, hot)
 

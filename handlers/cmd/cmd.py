@@ -3,6 +3,7 @@ import os
 import subprocess
 from handlers.pyprompt import Terminal
 from handlers.config import getConfigData
+from handlers.stir.stir import stir
 
 pyp = Terminal()
 
@@ -22,7 +23,7 @@ def list():
     except Exception as e:
         pyp.error(f"Error listing commands: {e}")
 
-def run(group):
+def run(group, hot=False):
     try:
         config = getConfigData(".")
         cmd_groups = config.get("cmd", {})
@@ -32,10 +33,14 @@ def run(group):
             return
 
         pyp.good(f"Running commands in group: [high]{group}[/high]")
-        for cmd in commands:  
+        for cmd in commands:
             pyp.high(f"→ Executing: {cmd}")
             os.system(cmd)
             pyp.good(f"✔ Command succeeded: {cmd}")
+        # Enable stir mode if hot flag is passed
+        if hot:
+            pyp.good("Stir mode is enabled.")
+            stir()
 
     except Exception as e:
         pyp.error(f"Error running commands: {e}")
