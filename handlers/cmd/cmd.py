@@ -25,7 +25,6 @@ def list():
 def run(group):
     try:
         config = getConfigData(".")
-        print(config)
         cmd_groups = config.get("cmd", {})
         commands = cmd_groups.get(group)
         if not commands:
@@ -33,7 +32,7 @@ def run(group):
             return
 
         pyp.good(f"Running commands in group: [high]{group}[/high]")
-        for cmd in commands.get("cmd", []):
+        for cmd in commands:  
             pyp.high(f"→ Executing: {cmd}")
             os.system(cmd)
             pyp.good(f"✔ Command succeeded: {cmd}")
