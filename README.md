@@ -92,8 +92,8 @@ Here’s a sample project config using Cook:
   "name": "nuxt-awesome-app",
   "author": "thenormvg",
   "cmd": {
-    "serve": { "cmd": ["pnpm i", "npm run dev"], "hot": true },
-    "build": {"cmd": ["pnpm run build"], "hot": false}
+    "serve":  ["pnpm i", "npm run dev"], 
+    "build": ["pnpm run build"]
   },
   "template": {
     "name": "nuxt-fullstack-template",
