@@ -20,6 +20,8 @@ from handlers.pyprompt import Terminal
 from handlers import const
 import os
 import warnings
+from handlers.config import createCookConfigFile,checkConfigFile,getConfigData,inputConfigData
+from handlers.const import DEFAULT_COOK_CONFIG
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
@@ -40,7 +42,7 @@ app.add_typer(cook_licence.app,name="licence")
 # app.add_typer(cook_tunnel.app, name="tunnel")
 
 # app.add_typer(cook_plate.app, name="plate")
-# app.add_typer(cook_cmd.app, name="cmd")
+app.add_typer(cook_cmd.app, name="cmd")
 
 # app.add_typer(cook_layer.app, name="layer")
 # app.add_typer(cook_slice.app,name="slice")
@@ -69,6 +71,16 @@ def loc(dir: Annotated[str, typer.Argument()] = ".",exclude: Annotated[List[str]
 @app.command("version")
 def version():
     pyp.high(const.COOK_VERSION)
+
+@app.command("init")
+def init():
+    if checkConfigFile(".")==False:
+        pyp.error("cook.conf.json file not found, creating a new one...")
+        config_data=inputConfigData(ask_template=False)
+        createCookConfigFile(".",config_data)
+        pyp.good("cook.conf.json has been created successfully.")
+
+
 
 # Follow this for version
 

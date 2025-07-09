@@ -40,7 +40,7 @@ def gen(licence_name,project_name,ask=False):
 
 
 def list_licence():
-    pyp.show_list(title="LICENCE LIST",items=licence_helper.list_licenses())
+    pyp.show_list(title="Licence List",items=licence_helper.list_licenses())
 
 
 

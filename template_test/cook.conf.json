@@ -1,30 +1,26 @@
 {
-    "name": "qwe",
-    "author": "thenormvg",
+    "name": "Alex",
+    "author": "sibamnight",
     "stir": true,
     "cmd": {
         "serve": [
-            "dfg"
-        ],
-        "cook": [],
-        "clean": [
-            "123"
+            "npm i",
+            "npm run dev"
         ],
         "build": [
-            "vnb"
+            "npm run build"
+        ],
+        "clean": [
+            "rm -rf node_modules"
         ]
     },
     "template": {
-        "name": "test-v3-py",
-        "category": "md",
-        "version": "1.23.4.",
-        "stack": [
-            "md",
-            "js",
-            "vue",
-            "py"
-        ],
-        "github": "https://github.com/NormVg/cook",
-        "readme": "README.md"
+        "name": "",
+        "category": "",
+        "date": "",
+        "author": "",
+        "stack": [],
+        "github": "",
+        "readme": ""
     }
 }

@@ -7,3 +7,4 @@ watchdog
 rich
 platformdirs
 tqdm
+httpx

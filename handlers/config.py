@@ -40,11 +40,11 @@ def createCookConfigFile(dirPath,config_data=None):
 
 def getConfigData(dirPath):
     if not checkConfigFile(dirPath):
-        createCookConfigFile(dirPath)
-
+        pyp.error("Cook config file not found, use cook init to create one")
+        exit(1)
+        # createCookConfigFile(dirPath)
     with open(getConfigPath(dirPath), "r") as file:
         config_data = json.load(file)
-
     return config_data
 
 def updateConfigData(dirPath, data):
@@ -93,7 +93,7 @@ def inputConfigData(ask_template=True, template_data=None):
   config_data = DEFAULT_COOK_CONFIG.copy()
 
   config_data['name'] = pyp.ask("Enter project name", required=True)
-  config_data['stir'] = pyp.confirm("wana stir the project? ")
+  # config_data['stir'] = pyp.confirm("wana stir the project? ")
   config_data['cmd']['serve'] = pyp.ask_list("Enter commands to serve the project")
   config_data['cmd']['build'] = pyp.ask_list("Enter commands to build the project")
   config_data['cmd']['clean'] = pyp.ask_list("Enter commands to clean the project")
