@@ -15,7 +15,7 @@ DEFAULT_USER_DATA = {
 DEFAULT_COOK_CONFIG = {
       "name": "",
       "author": "",
-      "stir": True,
+      # "stir": True,
       "cmd": {
           "serve": [],
           "build": [],
@@ -32,6 +32,11 @@ DEFAULT_COOK_CONFIG = {
       }
   }
 
+DEFAULT_STIR_CONFIG = {
+  "command": [],
+  "ignore_patterns": [],
+  "watch_dir": ""
+}
 
 COOK_BANNER = r'''
   _________  ____  __ __
