@@ -3,8 +3,8 @@ import os
 import subprocess
 from handlers.pyprompt import Terminal
 from handlers.config import getConfigData
-from handlers.stir.stir import stir
-
+# from handlers.stir.stir import stir  # Importing stir function from handlers.stir.stir
+from handlers.stir.stir import stir_hot_reload  # Import the specific function
 pyp = Terminal()
 
 def list():  
@@ -32,15 +32,13 @@ def run(group, hot=False):
             pyp.error(f"No commands found for group '{group}'.")
             return
 
-        pyp.good(f"Running commands in group: [high]{group}[/high]")
-        for cmd in commands:
-            pyp.high(f"→ Executing: {cmd}")
-            os.system(cmd)
-            pyp.good(f"✔ Command succeeded: {cmd}")
-        # Enable stir mode if hot flag is passed
-        if hot:
-            pyp.good("Stir mode is enabled.")
-            stir()
+        if hot:  
+            stir_hot_reload()  
+        else:
+            for cmd in commands:
+                pyp.high(f"→ Executing: {cmd}")
+                os.system(cmd)
+                pyp.good(f"✔ Command succeeded: {cmd}")
 
     except Exception as e:
         pyp.error(f"Error running commands: {e}")
