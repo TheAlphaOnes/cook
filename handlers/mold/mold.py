@@ -56,6 +56,7 @@ def add(dir,templateData,ask=False):
 
     else:
         config.updateConfigData(dirPath=nowDir, data={
+            "author":user.readUserData().get('username'),
             "template": nowTemplateData
         })
 
@@ -263,7 +264,7 @@ def update(dir,ask=False):
         pyp.error("Cook config not found or not valid")
 
 
-        
+
 
 
         # config.updateConfigData(dirPath=nowDir, data={

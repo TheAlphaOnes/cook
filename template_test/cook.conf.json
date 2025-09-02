@@ -1,26 +1,31 @@
 {
-    "name": "Alex",
-    "author": "sibamnight",
+    "name": "cook",
+    "author": "thenormvg",
     "stir": true,
     "cmd": {
         "serve": [
-            "npm i",
-            "npm run dev"
+            "python3 main.py"
         ],
         "build": [
-            "npm run build"
+            "tree"
         ],
         "clean": [
-            "rm -rf node_modules"
+            "ls"
         ]
     },
     "template": {
-        "name": "",
-        "category": "",
-        "date": "",
-        "author": "",
-        "stack": [],
-        "github": "",
-        "readme": ""
+        "name": "nuxt-fullstack-v2",
+        "category": "nuxt",
+        "version": "2.4.0",
+        "stack": [
+            "nuxt",
+            "vue",
+            "postgress",
+            "js",
+            "ts",
+            "drizzle"
+        ],
+        "github": "https://github.com/NormVg/cook",
+        "readme": "README.md"
     }
 }

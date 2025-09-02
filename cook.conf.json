@@ -1,0 +1,25 @@
+{
+    "name": "cook-cli",
+    "author": "thenormvg",
+    "stir": true,
+    "cmd": {
+        "serve": [
+            "python3"
+        ],
+        "build": [
+            "pip3 -m PyInstaller main.py"
+        ],
+        "clean": [
+            "rm -rf venv"
+        ]
+    },
+    "template": {
+        "name": "",
+        "category": "",
+        "date": "",
+        "author": "",
+        "stack": [],
+        "github": "",
+        "readme": ""
+    }
+}

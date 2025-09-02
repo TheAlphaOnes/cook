@@ -18,6 +18,7 @@ from handlers.loc import line_of_code
 from handlers import tree
 from handlers.pyprompt import Terminal
 from handlers import const
+from handlers import user
 import os
 import warnings
 from handlers.config import createCookConfigFile,checkConfigFile,getConfigData,inputConfigData
@@ -59,17 +60,19 @@ def ping():
 
 
 @app.command("loc")
-def loc(dir: Annotated[str, typer.Argument()] = ".",exclude: Annotated[List[str], typer.Argument()] = None):
-    line_of_code(dir,exclude)
+def loc(exclude: Annotated[List[str], typer.Argument()] = None):
+    line_of_code(".",exclude)
 
 
 @app.command("tree")
-def loc(dir: Annotated[str, typer.Argument()] = ".",exclude: Annotated[List[str], typer.Argument()] = None):
-    tree.show_tree_for_directory(dir,exclude if exclude else [])
+def tree_func(exclude: Annotated[List[str], typer.Argument()] = None):
+    tree.show_tree_for_directory(".",exclude if exclude else [])
 
 
 @app.command("version")
 def version():
+    pyp.high(const.COOK_BANNER)
+
     pyp.high(const.COOK_VERSION)
 
 @app.command("init")
