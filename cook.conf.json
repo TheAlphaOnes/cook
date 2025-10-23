@@ -1,16 +1,16 @@
 {
-    "name": "cook-cli",
+    "name": "cook",
     "author": "thenormvg",
     "stir": true,
     "cmd": {
         "serve": [
-            "python3"
+            "python3 main.py version"
         ],
         "build": [
-            "pip3 -m PyInstaller main.py"
+            "pyinstaller main.py --name cook"
         ],
         "clean": [
-            "rm -rf venv"
+            "echo \"clean code\""
         ]
     },
     "template": {

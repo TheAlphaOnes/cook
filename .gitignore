@@ -1,3 +1,4 @@
+build
 dist
 out
 venv
@@ -6,4 +7,3 @@ __pycache__
 temp
 test.py
 *.zst
-

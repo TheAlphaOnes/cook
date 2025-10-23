@@ -56,3 +56,27 @@ COOK_INVISIBLE_FF = [
   ".pytest_cache",
   ".cache",
 ]
+
+
+NON_CODE_EXTENSIONS = {
+    # Image files
+    '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.svg',
+    '.webp', '.ico', '.icns',
+    # Video files
+    '.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.m4v',
+    '.3gp', '.ogv',
+    # Audio files
+    '.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma', '.m4a', '.opus',
+    # Archive files
+    '.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.dmg', '.pkg',
+    # Binary/executable files
+    '.exe', '.dll', '.so', '.dylib', '.bin', '.app',
+    # Font files
+    '.ttf', '.otf', '.woff', '.woff2', '.eot',
+    # Document files (typically not code)
+    '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+    # Database files
+    '.db', '.sqlite', '.sqlite3', '.mdb',
+    # Other binary/non-text files
+    '.pyc', '.pyo', '.class', '.jar', '.war', '.ear'
+}
